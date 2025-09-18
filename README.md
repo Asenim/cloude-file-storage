@@ -18,3 +18,9 @@ git pull origin master
 #### Установка зависимостей
 ##### Через pip
 ##### Через poetry
+
+
+### Как поднять dev db
+```shell
+docker-compose -f docker-compose.dev.yaml up
+```

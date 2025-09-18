@@ -1,0 +1,9 @@
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=database
+# адрес сервера БД (или имя контейнера в Docker)
+DB_HOST=localhost
+DB_PORT=5432
+
+
+SECRET_KEY=secret_key
