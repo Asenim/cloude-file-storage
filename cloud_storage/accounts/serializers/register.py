@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
@@ -8,19 +9,25 @@ User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
+        min_length=2,
         max_length=150,
         help_text="Обязательное поле. Не более 150 символов. Только буквы, цифры и символы @/./+/-/_.",
+        validators=(
+            UniqueValidator(queryset=User.objects.all(), message="Пользователь с таким именем уже существует."),
+        ),
         error_messages={
             "required": "Имя пользователя обязательно.",
             "max_length": "Имя пользователя не может быть длиннее 150 символов.",
-            "unique": "Пользователь с таким именем уже существует."
         }
     )
     email = serializers.EmailField(
+        write_only=True,
         help_text="Обязательное поле. Введите корректный email.",
+        validators=[
+            UniqueValidator(queryset=User.objects.all(), message="Пользователь с таким email уже существует.")
+        ],
         error_messages={
             "required": "Email обязателен.",
-            "unique": "Пользователь с таким email уже существует.",
             "invalid": "Введите корректный email."
         }
     )

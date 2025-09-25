@@ -1,5 +1,6 @@
 from .serializers.register import RegisterSerializer
 from .serializers.authenticate import AuthJWTSerializer
+from .token_storage import RedisTokenStorage
 
 from django.contrib.auth import get_user_model
 
@@ -13,12 +14,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 User = get_user_model()
+storage = RedisTokenStorage()
 
 
 class RegisterView(generics.CreateAPIView):
-    # Указываем с каким queryset работаем
     queryset = User.objects.all()
-    # Указываем с каким сериализатором взаимодействуем
     serializer_class = RegisterSerializer
 
 
@@ -29,7 +29,7 @@ class LogoutView(APIView):
             return Response({"detail": "Не передан refresh-токен"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             token = RefreshToken(refresh_token)
-            token.blacklist()
+            storage.remove_refresh_token(token["user_id"], token["jti"])
             return Response({"detail": "Вы успешно вышли"}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             print("Ошибка при logout:", e)
