@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'accounts',
+    'file_storages',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cloud_storage.wsgi.application'
 
+# envs
+POSTGRES_DB = env("POSTGRES_DB")
+POSTGRES_USER = env("POSTGRES_USER")
+POSTGRES_PASSWORD = env("POSTGRES_PASSWORD")
+DB_HOST = env("DB_HOST")
+DB_PORT = env("DB_PORT")
+
+REDIS_HOST = env("REDIS_HOST")
+REDIS_PORT = env("REDIS_PORT")
+
+MINIO_ROOT_USER = env("MINIO_ROOT_USER")  # или|и AWS_ACCESS_KEY_ID
+MINIO_ROOT_PASSWORD = env("MINIO_ROOT_PASSWORD")  # или|и AWS_SECRET_ACCESS_KEY
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -81,31 +94,40 @@ WSGI_APPLICATION = 'cloud_storage.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("POSTGRES_DB"),
-        'USER': env("POSTGRES_USER"),
-        'PASSWORD': env("POSTGRES_PASSWORD"),
-        'HOST': env("DB_HOST"),  # адрес сервера БД (или имя контейнера в Docker)
-        'PORT': env("DB_PORT"),
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': DB_HOST,  # адрес сервера БД (или имя контейнера в Docker)
+        'PORT': DB_PORT,
     }
 }
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/0",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
     "jwt": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/1",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
+AWS_ACCESS_KEY_ID = MINIO_ROOT_USER
+AWS_SECRET_ACCESS_KEY = MINIO_ROOT_PASSWORD
+AWS_STORAGE_BUCKET_NAME = 'user-files'      # Название бакета S3
+AWS_S3_REGION_NAME = 'us-east-1'                # Регион бакета
+AWS_QUERYSTRING_AUTH = True                       # Генерация подписанных URL для приватных файлов
+AWS_S3_ENDPOINT_URL = 'http://localhost:9000'   # Важно для minio
+AWS_DEFAULT_ACL = None       # Для приватных файлов
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

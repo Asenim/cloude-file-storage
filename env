@@ -1,9 +1,20 @@
+# SQL
 POSTGRES_USER=user
 POSTGRES_PASSWORD=password
 POSTGRES_DB=database
-# адрес сервера БД (или имя контейнера в Docker)
+## адрес сервера БД (или имя контейнера в Docker)
 DB_HOST=localhost
 DB_PORT=5432
 
+# REDIS
+REDIS_HOST=localhost
+REDIS_PORT=6379
+## Указывает в какой области в redis хранятся токены
+TOKEN_STORAGE=1
 
+# MinIO
+MINIO_ROOT_USER=
+MINIO_ROOT_PASSWORD=
+
+# Django
 SECRET_KEY=secret_key
