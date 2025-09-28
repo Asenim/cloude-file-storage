@@ -121,7 +121,7 @@ CACHES = {
 
 AWS_ACCESS_KEY_ID = MINIO_ROOT_USER
 AWS_SECRET_ACCESS_KEY = MINIO_ROOT_PASSWORD
-AWS_STORAGE_BUCKET_NAME = 'user-files'      # Название бакета S3
+AWS_STORAGE_BUCKET_NAME = 'resource'      # Название бакета S3
 AWS_S3_REGION_NAME = 'us-east-1'                # Регион бакета
 AWS_QUERYSTRING_AUTH = True                       # Генерация подписанных URL для приватных файлов
 AWS_S3_ENDPOINT_URL = 'http://localhost:9000'   # Важно для minio

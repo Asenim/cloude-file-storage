@@ -45,6 +45,9 @@ python manage.py makemigrations
 ```shell
 python manage.py migrate
 ```
+```shell
+python manage.py init_buckets
+```
 
 ### Запуск приложения
 ```shell
